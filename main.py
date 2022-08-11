@@ -103,17 +103,17 @@ class Game:
             self.next_spin = None
         # move
         if (self.next_move is not None) and (self.falling_puyos != (None, None)):
-            no = True
+            no = [True, True]
             if self.next_move == 'r':
                 add = 1
             elif self.next_move == 'l':
                 add = -1
-            for puyo in self.falling_puyos:
+            for i, puyo in enumerate(self.falling_puyos):
                 if puyo is not None:
                     puyo.set_x(puyo.get_x() + add)
                     if (puyo.get_x() in range(self.width)) and (self.board[puyo.get_y()][puyo.get_x()] == None):
-                        no = False
-            if no == True:
+                        no[i] = False
+            if True in no:
                 for puyo in self.falling_puyos:
                     if puyo is not None:
                         puyo.set_x(puyo.get_x() - add)
