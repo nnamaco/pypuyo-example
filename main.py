@@ -113,11 +113,13 @@ class Game:
                     puyo.set_x(puyo.get_x() + add)
                     if (puyo.get_x() in range(self.width)) and (self.board[puyo.get_y()][puyo.get_x()] == None):
                         no[i] = False
+                else:
+                    no[i] = False
             if True in no:
                 for puyo in self.falling_puyos:
                     if puyo is not None:
                         puyo.set_x(puyo.get_x() - add)
-            self.next_spin = None
+            self.next_move = None
         # fall
         if self.frame_count == self.frames_to_fall:
             for i, puyo in enumerate(self.falling_puyos):
