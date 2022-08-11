@@ -42,6 +42,7 @@ class Game:
         self.dirs_tf = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         self.dir_ = 2
         self.is_gameover = False
+        self.highest_x = (self.width - 1)
 
     def is_over(self):
         return self.is_gameover
@@ -132,8 +133,11 @@ class Game:
                     if ((puyo.get_y() + (add + 2)) <= self.height) and (self.board[puyo.get_y()+1][puyo.get_x()] == None):
                         puyo.set_y(puyo.get_y() + 1)
                     else:
+                        # FIXME: Not shure if this works...
                         if puyo.get_y() <= -1:
                             self.is_gameover = True
+                        if puyo.get_y() < self.highest_x:
+                            self.highest_x = puyo.get_y()
                         self.board[puyo.get_y()][puyo.get_x()] = puyo.get_color()
                         tmp_list = list(self.falling_puyos)
                         tmp_list[i] = None
