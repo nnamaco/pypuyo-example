@@ -1,6 +1,5 @@
 import numpy as np
 import tkinter as tk
-from time import sleep
 from math import floor
 from random import choice
 from copy import deepcopy
