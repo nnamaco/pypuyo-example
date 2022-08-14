@@ -1,7 +1,6 @@
 # pyyo-example
-バグぷよです。  
-puyo library -> https://github.com/nnamaco/pypuyo
+Example code for pypuyo-> https://github.com/nnamaco/pypuyo
 
-# 操作
-a,dで横移動
-n,mで回転
+# Controlls
+-move : A, D
+-spin : N, M
