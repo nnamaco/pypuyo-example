@@ -1,6 +1,4 @@
-from audioop import reverse
 import numpy as np
-import sys
 import tkinter as tk
 from time import sleep
 from math import floor
@@ -43,7 +41,7 @@ class Game:
         self.dirs_tf = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         self.dir_ = None
         self.is_gameover = False
-        self.highest_y = (self.height - 1)
+        self.highest_y = (self.height - 2)
 
     def is_over(self):
         return self.is_gameover
@@ -138,41 +136,46 @@ class Game:
                             self.highest_y = puyo.get_y()
                         self.board[puyo.get_y()][puyo.get_x()] = puyo.get_color()
                         self.falling_puyos[i] = None
-                        # # puyo-disapearing
-                        # targets_s = []
-                        # targets = []
-                        # for y, list_ in enumerate(self.board[self.highest_y:]):
-                        #     for x in range(len(list_)):
-                        #         if (x, y) not in targets:
-                        #             targets =[]
-                        #             def _find(x, y ,list):
-                        #                 list.append((x, y))
-                        #                 for direction in ((0, 1), (1, 0), (0, -1), (-1, 0)):
-                        #                     find_x = x + direction[0]
-                        #                     find_y = y + direction[1]
-                        #                     if (find_x in range(self.width)) and (find_y in range(self.height)):
-                        #                             if ((find_x, find_y) not in list) and (self.board[find_y][find_x] == self.board[y][x]):
-                        #                                 _find(find_x, find_y, list)
-                        #             _find(x, y, targets)
-                        #             targets_s.append(targets)
-                        # for list_ in targets_s:d
-                        #     if len(list_) >= 4:
-                        #         for tf in list_:
-                        #             self.board[tf[1]][tf[0]] = None
-                        # # puyo-dropping
-                        # for y, list_ in enumerate(self.board[self.highest_y::-1]):
-                        #     if np.all(self.board[self.highest_y:(y + 1)] == None):
-                        #         self.highest_y = (y + 1)
-                        #         break
-                        #     else:
-                        #         for x, color in enumerate(list_):
-                        #             if color == None:
-                        #                 self.board[y][x], self.board[y - 1][x] = self.board[y - 1][x], self.board[y][x]
             if self.falling_puyos == [None, None]:
                 self.falling_puyos = [self._Puyo(floor(self.width / 2), 1, choice(self.colors)),
                                       self._Puyo(floor(self.width / 2), 0, choice(self.colors))
                                      ]   
                 self.dir_ = 2
+            # puyo-disapearing
+            targets = {color: [] for color in self.colors}
+            for y, list_ in enumerate(self.board[self.highest_y:]):
+                for x, color in enumerate(list_):
+                    if color is not None:
+                        target = []
+                        def _find(x, y ,list):
+                            list.append((x, y))
+                            for direction in ((0, 1), (1, 0), (0, -1), (-1, 0)):
+                                find_x = x + direction[0]
+                                find_y = y + direction[1]
+                                if (find_x in range(self.width)) and (find_y in range(self.height)):
+                                        if ((find_x, find_y) not in list) and (self.board[find_y][find_x] == self.board[y][x]):
+                                            _find(find_x, find_y, list)
+                        _find(x, (y + self.highest_y), target)
+                        target.sort(key=lambda x: x[0] + (x[1] * 100))
+                        if (len(target) >= 4) and (target not in targets[color]):
+                            targets[color].append(target)
+            print(targets)
+            for color_list in targets.values():
+                if len(color_list) > 0:
+                    for target in color_list:
+                        for tf in target:
+                            self.board[tf[1]][tf[0]] = None
+            # puyo-dropping
+            print(self.board[:(self.highest_y - 1):-1])
+            for y, list_ in enumerate(self.board[:(self.highest_y - 1):-1]):
+                true_y = self.height - (y + 1)
+                if np.all(self.board[(self.highest_y - 1):(true_y + 1)] == None):
+                    self.highest_y = (true_y + 1)
+                    break
+                else:
+                    for x, color in enumerate(list_):
+                        if color == None:
+                            self.board[true_y][x], self.board[true_y - 1][x] = self.board[true_y - 1][x], self.board[true_y][x]
             self.frame_count = 1
         else:
             self.frame_count += 1
