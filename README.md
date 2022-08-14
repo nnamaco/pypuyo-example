@@ -1,5 +1,6 @@
 # pyyo-example
-バグぷよです。
+バグぷよです。  
+puyo library -> https://github.com/nnamaco/pyyo
 
 # 操作
 a,dで横移動
