@@ -1,2 +1,2 @@
-pypuyo>=1.0.3
+pypuyo>=1.0.4
 tkinter
